@@ -1,0 +1,22 @@
+{
+  "name": "book-store-api",
+  "version": "1.0.0",
+  "description": "books store bakend",
+  "main": "app.js",
+  "scripts": {
+    "hi": "nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zaid aqaileh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "joi": "^17.13.3",
+    "mongoose": "^8.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "redme": "^1.0.0"
+  }
+}
