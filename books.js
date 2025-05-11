@@ -3,6 +3,7 @@ const express =require("express");
 const router =express.Router();
 const asyncHandler =require("express-async-handler");
 const{validateCreateBook,validateCreateBookS,book}=require("./models/book");
+const { author } = require("./models/Author");
 
 
 
@@ -14,7 +15,7 @@ router.get("/:id",asyncHandler(async(req,res) => {
 */
 router.get("/:id",asyncHandler(async(req,res) => {
 
-const book = await book .findbyid( req.params.id); 
+const book = await book .findbyid( req.params.id).populate("author"); 
 if(book){
     res.status(200).json(book);
 } else {
@@ -25,7 +26,7 @@ if(book){
 
 router.get("/",asyncHandler(async(req,res) => {
 
-const books = await book.find(); 
+const books = await book.find().populate("author"["id.firstName.lstName" ]); 
 if(book){
     res.status(200).json(books);
 } else {
