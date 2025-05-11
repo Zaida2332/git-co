@@ -1,75 +1,42 @@
 
 const express =require("express");
 const router =express.Router();
-
-const joi =require('joi');
-
-const books = [
-
-/**
- * 
- * @desc get all books
- * @rout /api/books
- * @method GET
- * @access public
- * 
-  */ 
-    {
+const asyncHandler =require("express-async-handler");
+const{validateCreateBook,validateCreateBookS,book}=require("./models/book");
 
 
-        id:5,
-        title:"ljkn",
-        description:"kjnlknln",
-        price :10,
-        cover:"soft cover"
-    
-    
-    },
 
-{
+/*
+router.get("/:id",asyncHandler(async(req,res) => {
+    const books = await book.find()
+    res.status(200.json(books));
+}));
+*/
+router.get("/:id",asyncHandler(async(req,res) => {
 
-
-    id:1,
-    title:"nasim taleb",
-    description:"about blak swan",
-    price :10,
-    cover:"soft cover"
-
-
-},
-
-
-{
-
-
-    id:2,
-    title:"nasim taleb",
-    description:"about blak swan",
-    price :12,
-    cover:"soft cover"
-
-
-},
-
-
-]
-router.get ("/",(req,res)=> {
-    res.status(200).json(books);
-
-});
-
-
-router.get("/:id",(req,res) => {
-
-    const book = books.find(b =>b.id === parseInt( req.params.id) ); 
+const book = await book .findbyid( req.params.id); 
 if(book){
     res.status(200).json(book);
 } else {
     res.status(404).json({message:"book not fond"});
 }
-});
 
-router.post("/",(req,res) => {
+}));
+
+router.get("/",asyncHandler(async(req,res) => {
+
+const books = await book.find(); 
+if(book){
+    res.status(200).json(books);
+} else {
+    res.status(404).json({message:"book not fond"});
+}
+
+}));
+
+
+router.post("/",asyncHandler(async (req,res) => {
+
     const {error}=validateCreateBook(req.body);
     
     if(error){
@@ -77,23 +44,22 @@ router.post("/",(req,res) => {
 return res.status(400).json({message: error.details[0].message});
     }
 
+    const newBook = new book (
+        {
 
-
-
-    const book = {
-    id:books.length +1,
+        
+    
     title :req.body.title,
     author :req.body.author,
     description: req.body.description,
     price:req.body.price,
     cover:req.body.cover
+        }
+    )
+    const result =await newBook.save();
+    res.status(201).json(result);
 
-    }
-
-    books.push(book)
-    res.status(201).json(books);
-
-});
+}));
 
 
 /**
@@ -105,21 +71,28 @@ return res.status(400).json({message: error.details[0].message});
  *
   */  
 
-router.put("/:id",(req,res) => {
+router.put("/:id",asyncHandler(async(req,res) => {
     const {error} = validateCreateBook(req.body);
     if(error){
 
         return res.status(400).json({message: error.details[0].message});
     }
-    const book =books.find(b => b.id === parseInt(req.params.id));
-    if(book){
-        res.status(200).json({message:"books has been updated"});
+const updatedBook =await Book.findbyidAndUpdate(req.params.id,{
 
-    }else{
-        res.status(404).json({message:"book not found"});
+    $set:{
+
+    title :req.body.title,
+    author :req.body.author,
+    description: req.body.description,
+    price:req.body.price,
+    cover:req.body.cover
+
+
     }
+},{new:true});
+res.status(200).json(updatedBook);
 
-});
+}));
 router.post("/:id",(req,res) => {
     const {error} = validateCreateBook(req.body);
     if(error){
@@ -145,30 +118,18 @@ router.post("/:id",(req,res) => {
  *
   */  
 
-router.delete("/:id",(req,res) => {
-    const book =books.find(b => b.id === parseInt(req.params.id));
+router.delete("/:id",asyncHandler(async(req,res) => {
+    const book =await Book.findbyid(req.params.id);
     if(book){
+        await Book.findbyidAndDelete(req.params.id);
         res.status(200).json({message:"books has been delete"});
 
     }else{
         res.status(404).json({message:"book not found"});
     }
 
-});
+}));
 
 
-function validateCreateBook(obj){
-
-    const shcema=joi.object({
-        title:joi.string().trim().min(3).max(200).required(),
-        author:joi.string().trim().min(3).max(200).required(),
-        description:joi.string().trim().max(500).required(),
-        price:joi.number().min(0).required(),
-        cover:joi.string().trim().required(),
-    });
-
-
-return shcema.validate(obj);
-}
 
 module.exports =router;
