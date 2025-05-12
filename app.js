@@ -5,6 +5,7 @@ const bookspath =require("./books");
 const authorspath =require ("./authors");
 const mongoose=require("mongoose");
 const logger =require("./middlewares/logger");
+const{notfound,errorHanlder}=require("./middlewares/errors");
 const dotenv =require("dotenv");
 dotenv.config();
 
@@ -23,6 +24,10 @@ app.use(express.json());
 
 app.use("/api/books",bookspath);
 app.use("/api/authors",authorspath);
+
+app.use(notfound);
+
+app.use(errorHanlder);
 
 
 
