@@ -1,7 +1,7 @@
 const express = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const router =express.Router();
-const asyncHandler =require("express-async-handler"); /////////
+ /////////
 const { author ,validateCreateAuthor,validateUpdateAuthor} =require("./models/Author");
 const authors =[
     {
@@ -26,7 +26,7 @@ const authors =[
 
 
 
-router.get ("/", asyncHandler (//////
+router.get ("/",  (//////
     async( req, res) => {
         try{
 
