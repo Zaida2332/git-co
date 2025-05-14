@@ -1,6 +1,7 @@
 const express = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const router =express.Router();
+const jwt = require("jsonwebtoken");
 const {User,validateRegisterUser,validatelogenirUser} = require("./models/User");
 const bcrypt =require("bcryptjs");
 /**
@@ -51,7 +52,7 @@ res.status(202).json({...other,token});
  * @access public
  * 
   */ 
-router.get("/login",async(req,res)=>{
+router.post("/login",async(req,res)=>{
     
     const {error} = validatelogenirUser(req.body);
 
@@ -72,7 +73,10 @@ if (!isPasswordMatch){
     return res.status(400).json({message:"nvalid email or password"});
 }
 
-const token = null;
+const token = jwt.sign({ id:user._id, isAdmin: user.isAdmin },process.env.JWT_SECRET_KEY/*,{
+    expiresIn:"4d"
+}*/);
+
 const {password, ...other} = user._doc;
 
 
