@@ -24,7 +24,7 @@ if(book){
 
 }));
 
-router.get("/",asyncHandler(async(req,res,next) => {
+router.get("/",asyncHandler(async(req,res) => {
 
 const books = await book.find().populate("author"["id.firstName.lstName" ]); 
 if(book){

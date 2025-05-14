@@ -1,31 +1,31 @@
 const mongoose =require ("mongoose");
 const joi = require("joi");
-const Userchema =new monggoose.Schema({
+const Userchema =new mongoose.Schema({
     email:{
-        tupe:string,
-        require:true,
+        type:String,
+        required:true,
         trim:true,
         minlength:5,
         maxlength:100,
         unique:true,
     },
-    Username:{
-        tupe:string,
-        require:true,
+    username:{
+        type:String,
+        required:true,
         trim:true,
         minlength:2,
         maxlength:200,
         unique:true,
     },
     password:{
-        tupe:string,
-        require:true,
+        type:String,
+        required:true,
         trim:true,
         minlength:6,
     
     },
-    aiAdmin:{
-        tupe:Boolean,
+    isAdmin:{
+        type:Boolean,
     default:false,
     
     }
@@ -37,7 +37,7 @@ function validateRegisterUser(obj){
     const Schema =joi.object({
         email:joi.string().trim().min(5).max(100).required().email(),
         username:joi.string().trim().min(6).max(200).required(),
-        password:joi.joi.string().trim().min(6).require(),
+        password:joi.string().trim().min(6).required(),
         isAdmin:joi.bool(),
     });
     return Schema.validate(obj);
@@ -45,7 +45,7 @@ function validateRegisterUser(obj){
 function validatelogenirUser(obj){
     const Schema =joi.object({
         email:joi.string().trim().min(5).max(100).required().email(),
-        password:joi.joi.string().trim().min(6).require(),
+        password:joi.joi.string().trim().min(6).required(),
     });
     return Schema.validate(obj);
 }

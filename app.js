@@ -3,6 +3,7 @@ const express = require("express");
 const bookspath =require("./books");
 
 const authorspath =require ("./authors");
+const authpath = require("./auth");
 const mongoose=require("mongoose");
 const logger =require("./middlewares/logger");
 const{notfound,errorHanlder}=require("./middlewares/errors");
@@ -24,6 +25,7 @@ app.use(express.json());
 
 app.use("/api/books",bookspath);
 app.use("/api/authors",authorspath);
+app.use("/api/auth",authpath);
 
 app.use(notfound);
 
