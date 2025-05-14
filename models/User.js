@@ -45,7 +45,7 @@ function validateRegisterUser(obj){
 function validatelogenirUser(obj){
     const Schema =joi.object({
         email:joi.string().trim().min(5).max(100).required().email(),
-        password:joi.joi.string().trim().min(6).required(),
+        password:joi.string().trim().min(6).required(),
     });
     return Schema.validate(obj);
 }
@@ -54,7 +54,7 @@ function validateUpdateUser(obj){
     const Schema =joi.object({
         email:joi.string().trim().min(5).max(100).email(),
         username:joi.string().trim().min(6).max(200),
-        password:joi.joi.string().trim().min(6),
+        password:joi.string().trim().min(6),
         isAdmin:joi.bool(),
     });
     return Schema.validate(obj);
