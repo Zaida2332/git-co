@@ -2,7 +2,7 @@ const express = require("express");
 const { Types: { ObjectId } } = require("mongoose");
 const router =express.Router();
 const jwt = require("jsonwebtoken");
-const {User,validateRegisterUser,validatelogenirUser} = require("./models/User");
+const {User,validateRegisterUser,validateLoginUser} = require("./models/User");
 const bcrypt =require("bcryptjs");
 /**
  * 
@@ -17,7 +17,7 @@ router.post("/register",async(req,res)=>{
     const {error} =validateRegisterUser(req.body);
 
     if(error){
-        return res.status(400).json({message:error.details[0].message});
+        return res.status(400).json({ error });
     }
 
 let user = await User.findOne({email:req.body.email});
@@ -39,7 +39,7 @@ user =new User({
 })
 
 const result = await user.save();
-const token = null;
+const token = jwt.sign({ id:user._id, isAdmin: user.isAdmin },process.env.JWT_SECRET_KEY);
 const {password, ...other} = result._doc;
 
 res.status(202).json({...other,token});
@@ -54,10 +54,10 @@ res.status(202).json({...other,token});
   */ 
 router.post("/login",async(req,res)=>{
     
-    const {error} = validatelogenirUser(req.body);
+    const {error} = validateLoginUser(req.body);
 
     if(error){
-        return res.status(400).json({message:error.details[0].message});
+        return res.status(400).json({ error });
     }
 
 let user = await User.findOne({email:req.body.email});
