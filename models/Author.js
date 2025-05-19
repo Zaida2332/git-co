@@ -36,7 +36,7 @@ image:{
 }
 
 );
-const author =mongoose.model("Author",authorSchem);
+const author =mongoose.model("Author",authorSchem);/*
 function validateCreateAuthor(obj) {
     const errors = {};
 
@@ -126,7 +126,41 @@ function findByIdAndDelete(obj) {
         error: Object.keys(errors).length > 0 ? errors : null,
         value: obj
     };
-};
+};*/
+function isStringInRange(str, min, max) {
+    return typeof str === "string" && str.trim().length >= min && str.trim().length <= max;
+}
+
+function isValidImage(image) {
+    return typeof image === "string" && image.trim().length > 0;
+}function validateCreateAuthor(obj) {
+    const { firstName, lastName, nationality, image } = obj;
+
+    return isStringInRange(firstName, 3, 200) &&
+        isStringInRange(lastName, 3, 200) &&
+        isStringInRange(nationality, 2, 100) &&
+        isValidImage(image);
+}function validateUpdateAuthor(obj) {
+    const { firstName, lastName, nationality, image } = obj;
+
+    return (
+        (firstName === undefined || isStringInRange(firstName, 3, 200)) &&
+        (lastName === undefined || isStringInRange(lastName, 3, 200)) &&
+        (nationality === undefined || isStringInRange(nationality, 2, 100)) &&
+        (image === undefined || isValidImage(image))
+    );
+}function validateDeleteAuthor(obj) {
+    const { firstName, lastName, nationality, image } = obj;
+
+    return (
+        isStringInRange(firstName, 3, 200) &&
+        isStringInRange(lastName, 3, 200) &&
+        typeof nationality === "string" && nationality.trim().length <= 500 &&
+        isValidImage(image)
+    );
+}function isValidObjectId(id) {
+    return typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id);
+}
 
 /*
 function validateCreateAuthor(obj){
