@@ -33,13 +33,54 @@ const Userchema =new mongoose.Schema({
 
 //User Model
 const User = mongoose.model("User",Userchema);
+
+function validateEmail(email){
+
+    const emailRegex =/^[\s@]+@[^\s@]+\.[^\s@]+$/; 
+    return typeof email ==="string" &&
+    email.trim ().length >= 5 &&
+    email .trim().length>=100 &&
+    emailRegex.test(email.trim());
+}
+function validateUsername(username){
+    return typeof username ==="string"&&
+    username .trim().length>= 6&&
+    username.trim().length <= 200 ;
+}
+function validatepassword(password){
+    return typeof password ==="string"&&
+    password.trim().length >=6; 
+}
+function validateIsAdmin(isAdmin){
+    return typeof isAdmin ==="boolean" ||isAdmin ===undefined;
+}
 function validateRegisterUser(obj){
+    const{email,username,password,isAdmin} =obj;
+    return validateEmail(email)&&
+    validateUsername(username)&&
+    validatepassword(password)&&
+    validateIsAdmin(isAdmin);
+}
+function validateLoginUser(obj){
+    const {email,password} = obj;
+    return validateEmail(email)&&
+    validatepassword(password);
+}
+function validateUpdateUser(obj){
+    const{email,username,password,ISAdmin} =obj;
+    return(email === undefined ||validateEmail(email))&&
+    (username===undefind)
+}
+
+/*function validateRegisterUser(obj){
   //  unction validateRegisterUser(obj) {
     const errors = {};
+    
 
     if (!obj.email || typeof obj.email !== 'string' || obj.email.trim().length < 5 || obj.email.trim().length > 100 || !obj.email.includes('@')) {
         errors.email = "Email must be a valid string between 5 and 100 characters and contain '@'.";
     }
+    //if(!validateEmail) { errors.email : "Invalid email, example of a valid email: tareq@several
 
     if (!obj.username || typeof obj.username !== 'string' || obj.username.trim().length < 6 || obj.username.trim().length > 200) {
         errors.username = "Username must be a string between 6 and 200 characters.";

@@ -26,7 +26,7 @@ const BookSchema =new mongoose.Schema({
         enum:["soft cover","hard cover"]
     }
 },{timestamps:true});
-const book = mongoose.model("book",BookSchema);
+const book = mongoose.model("book",BookSchema);/*
 function validateCreateBook(obj) {
     const errors = {};
 
@@ -82,6 +82,44 @@ const validateUpdateBook = (obj) => {
         error: Object.keys(errors).length > 0 ? errors : null,
         value: obj
     };
+}*/
+function validateTitle(title) {
+    return typeof title === 'string' && title.trim().length >= 3 && title.trim().length <= 250;
+}
+
+function validateAuthor(author) {
+    return typeof author === 'string' && author.trim().length > 0;
+}
+
+function validateDescription(description) {
+    return typeof description === 'string' && description.trim().length <= 500 && description.trim().length > 0;
+}
+
+function validatePrice(price) {
+    return typeof price === 'number' && price >= 0;
+}
+
+function validateCover(cover) {
+    return cover === 'soft cover' || cover === 'hard cover';
+}
+function validateCreateBook(obj) {
+    const { title, author, description, price, cover } = obj;
+
+    return validateTitle(title) &&
+        validateAuthor(author) &&
+        validateDescription(description) &&
+        validatePrice(price) &&
+        validateCover(cover);
+}function validateUpdateBook(obj) {
+    const { title, author, description, price, cover } = obj;
+
+    return (
+        (title === undefined || (typeof title === 'string' && title.trim().length >= 3 && title.trim().length <= 200)) &&
+        (author === undefined || typeof author === 'string') &&
+        (description === undefined || (typeof description === 'string' && description.trim().length > 0)) &&
+        (price === undefined || (typeof price === 'number' && price >= 0)) &&
+        (cover === undefined || (typeof cover === 'string' && cover.trim().length > 0))
+    );
 }
     /*
 
